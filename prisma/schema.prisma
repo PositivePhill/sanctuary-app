@@ -1,0 +1,111 @@
+// SANCTUARY — Prisma Schema
+// SQLite for dev. Postgres-compatible types for production migration.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("MEMBER") // ADMIN | MEMBER
+  avatarStyle  String?   // amber | blue | rose | emerald | violet
+  createdAt    DateTime  @default(now())
+
+  sessions        Session[]
+  prayerRequests  PrayerRequest[]
+  comments        Comment[]
+  devotionals     Devotional[]
+  rsvps           RSVP[]
+  prayerReactions PrayerReaction[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PrayerRequest {
+  id          String         @id @default(cuid())
+  authorId    String
+  content     String
+  isAnonymous Boolean        @default(false)
+  status      String         @default("ACTIVE") // ACTIVE | ANSWERED
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  author    User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  reactions PrayerReaction[]
+}
+
+model PrayerReaction {
+  id              String   @id @default(cuid())
+  prayerRequestId String
+  userId          String
+  type            String   // PRAYING | AMEN | PRAISE
+  createdAt       DateTime @default(now())
+
+  prayerRequest PrayerRequest @relation(fields: [prayerRequestId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([prayerRequestId, userId, type])
+}
+
+model Comment {
+  id              String       @id @default(cuid())
+  prayerRequestId String
+  authorId        String
+  content         String
+  createdAt       DateTime     @default(now())
+
+  prayerRequest PrayerRequest @relation(fields: [prayerRequestId], references: [id], onDelete: Cascade)
+  author        User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Devotional {
+  id                 String   @id @default(cuid())
+  authorId           String
+  title              String
+  scriptureReference String
+  content            String
+  publishDate        DateTime
+  createdAt          DateTime @default(now())
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  eventDate   DateTime
+  location    String
+  createdAt   DateTime @default(now())
+
+  rsvps RSVP[]
+}
+
+model RSVP {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+}

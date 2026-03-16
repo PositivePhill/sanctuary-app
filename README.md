@@ -17,10 +17,17 @@
 </p>
 
 <p align="center">
-  <a href="https://sanctuary-app.vercel.app">
+  <a href="https://sanctuary-app-pi.vercel.app">
     <img src="https://img.shields.io/badge/Live%20Demo-Visit%20SANCTUARY-22c55e?style=for-the-badge&logo=vercel" />
   </a>
 </p>
+
+
+
+
+<a href="https://vercel.com/new/clone?repository-url=https://github.com/PositivePhill/sanctuary-app">
+  <img src="https://vercel.com/button" alt="Deploy with Vercel"/>
+</a>
 
 ---
 
@@ -52,11 +59,11 @@ The project focuses on **security, accessibility, and production-ready architect
 
 ---
 
-# Demo
+# Production deployment:
 
 Live demo:
 
-https://sanctuary-app.vercel.app
+https://sanctuary-app-pi.vercel.app
 
 Demo credentials:
 

@@ -315,7 +315,7 @@ tests/
 # Screenshots
 
 ## Dashboard
-![Dashboard](./public/img_1.png)
+![Dashboard](./public/img.png)
 
 ## Prayer Wall
 ![Prayer Wall](./public/img_4.png)
